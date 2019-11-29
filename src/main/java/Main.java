@@ -20,10 +20,16 @@ public class Main {
             logger.error("Error handler", ex);
         });
 
+        InetSocketAddress fluentd1 = new InetSocketAddress("fluentd1", 24224);
+        InetSocketAddress fluentd2 = new InetSocketAddress("fluentd2", 24224);
+
+        logger.info("fluentd1 hostname = {} {}", fluentd1.getHostName(), fluentd1.getAddress().getHostAddress());
+        logger.info("fluentd2 hostname = {} {}", fluentd2.getHostName(), fluentd2.getAddress().getHostAddress());
+
         Fluency fluency = builder.build(
                 Arrays.asList(
-                        new InetSocketAddress("fluentd1", 24224),
-                        new InetSocketAddress("fluentd2", 24224)));
+                        fluentd1,
+                        fluentd2));
 
         Map<String, Object> event = new HashMap<>();
 
