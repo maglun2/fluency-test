@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id "application"
+}
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    baseName = rootProject.name
+}
+
+sourceCompatibility = 1.11
+targetCompatibility = 1.11
+
+dependencies {
+    compile 'org.komamitsu:fluency-fluentd:2.3.3'
+    compile 'org.komamitsu:fluency-core:2.3.3'
+
+    compile group: 'org.slf4j', name:'slf4j-api', version: '1.7.2'
+    compile group: 'ch.qos.logback', name:'logback-classic', version: '1.0.9'
+    compile group: 'ch.qos.logback', name:'logback-core', version: '1.0.9'
+}
+
+wrapper {
+   gradleVersion = '5.6.3'
+}
+
+ext {
+   javaMainClass = "Main"
+}
+
+application {
+    mainClassName = javaMainClass
+}

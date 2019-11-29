@@ -1,0 +1,15 @@
+version: '3'
+services:
+  fluency:
+    build: .
+    links:
+    - fluentd1
+    - fluentd2
+  fluentd1:
+    image: fluent/fluent-bit:1.3.3
+    volumes:
+    - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+  fluentd2:
+    image: fluent/fluent-bit:1.3.3
+    volumes:
+    - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
