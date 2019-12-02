@@ -1,0 +1,65 @@
+<configuration>
+
+    <appender name="FLUENCY" class="ch.qos.logback.more.appenders.FluencyLogbackAppender">
+
+        <tag>fluencytest</tag>
+
+        <remoteServers>
+            <remoteServer>
+                <host>fluentd1</host>
+                <port>24224</port>
+            </remoteServer>
+            <remoteServer>
+                <host>fluentd2</host>
+                <port>24224</port>
+            </remoteServer>
+        </remoteServers>
+
+        <additionalField>
+            <key>application</key>
+            <value>fluencytest</value>
+        </additionalField>
+
+        <useEventTime>true</useEventTime>
+        <bufferChunkInitialSize>2048</bufferChunkInitialSize>
+        <bufferChunkRetentionSize>8192</bufferChunkRetentionSize>
+        <!--
+        <fileBackupDir>/tmp</fileBackupDir>
+        <bufferChunkInitialSize>2097152</bufferChunkInitialSize>
+        <bufferChunkRetentionSize>16777216</bufferChunkRetentionSize>
+        <maxBufferSize>268435456</maxBufferSize>
+        <waitUntilBufferFlushed>30</waitUntilBufferFlushed>
+        <waitUntilFlusherTerminated>40</waitUntilFlusherTerminated>
+        <flushIntervalMillis>200</flushIntervalMillis>
+        -->
+        <!-- <senderMaxRetryCount>1000</senderMaxRetryCount> -->
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Wrap fluency in an async appender so that fluentbit logging problems does not disturb the normal flow.  -->
+    <appender name="FLUENCY_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- Max queue size of logs which is waiting to be sent (When it reach to the max size, the log will be discarded). -->
+        <queueSize>${FLUENT_MAX_QUEUE_SIZE:-5000}</queueSize>
+        <neverBlock>true</neverBlock>
+        <!-- By default, when the blocking queue has 20% capacity remaining, it will drop events of level TRACE, DEBUG and
+             INFO, keeping only events of level WARN and ERROR. To keep all events, set discardingThreshold to 0. -->
+        <discardingThreshold>0</discardingThreshold>
+        <maxFlushTime>${FLUENT_MAX_FLUSH_TIME:-10000}</maxFlushTime>
+        <appender-ref ref="FLUENCY"/>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="FLUENCY_ASYNC" />
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>

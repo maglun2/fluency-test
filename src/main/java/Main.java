@@ -26,6 +26,12 @@ public class Main {
         logger.info("fluentd1 hostname = {} {}", fluentd1.getHostName(), fluentd1.getAddress().getHostAddress());
         logger.info("fluentd2 hostname = {} {}", fluentd2.getHostName(), fluentd2.getAddress().getHostAddress());
 
+        for (int i = 0; i < 100000; i++) {
+            logger.info("i = " + i);
+            TimeUnit.SECONDS.sleep(2);
+        }
+
+/*
         Fluency fluency = builder.build(
                 Arrays.asList(
                         fluentd1,
@@ -41,5 +47,6 @@ public class Main {
             TimeUnit.SECONDS.sleep(2);
         }
         fluency.close();
+*/
     }
 }
